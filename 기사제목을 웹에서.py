@@ -21,13 +21,17 @@ def fetch_articles():
 
         soup = BeautifulSoup(response.content, 'html.parser')
 
-        articles = soup.find_all('div', class_='v-card--link')
+        # 디버깅을 위해 전체 HTML을 출력
+        # print(soup.prettify())
+
+        articles = soup.find_all('div', class_='v-card--link')  # class 이름이 정확한지 확인
 
         article_data = []
         for index, article in enumerate(articles[:10], start=1):  # 최대 10개 기사 가져오기
-            title_tag = article.find('p', class_='article-title')
+            title_tag = article.find('p', class_='article-title')  # 정확한 태그와 클래스 이름 확인
+
             if title_tag:
-                title = title_tag['title'].strip()
+                title = title_tag.get_text(strip=True)  # get_text를 사용하여 텍스트 추출
                 article_data.append((index, title))
 
         # 새로운 기사 확인
@@ -61,7 +65,7 @@ def index():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>페이스이라크 보안관련 기사 자동업데이트 by 정매</title>
+        <title>페이스 이라크 보안관련 기사 자동업데이트 v 0.7 (by 정매)</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -119,7 +123,7 @@ def index():
     </head>
     <body>
         <div class="update-info">5분마다 뉴스 갱신</div>
-        <h1>페이스이라크 보안관련 기사 자동업데이트 by Armir Jung</h1>
+        <h1>페이스 이라크 보안관련 기사 자동업데이트 v 0.7 (by 정매)</h1>
         <ul>
             {% for article in articles %}
                 <li class="title{% if article.new %} new-article{% endif %}">{{ article.index }}. {{ article.arabic_title }}<br>{{ article.korean_title }}{% if article.new %} (NEW){% endif %}</li>
